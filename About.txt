@@ -19,5 +19,6 @@ Merits:
     - All legal moves are considered and evaluated.
 Demerits:
     - Definitely not the most optimized version.
+    - Unlikely to detect 'stalemate' case, tries for only checkmate.
     - Special cases neglected like 'en passant' and 'castling'
-    - Real boards or online game boards cannot be effeciently and accurately converted into the required matrix form.
+    - No faster way to convert real boards or online game boards into the required matrix form accurately.

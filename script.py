@@ -47,9 +47,9 @@ class ChessBoard:
                     places.append((i-1,j))
                 if self.is_valid((i-2,j)) and i == 6 and self.is_empty((i-2,j)):
                     places.append((i-2,j))
-                if self.is_valid((i-1,j+1)) and not self.is_same_color(pos,(i-1,j+1)):
+                if self.is_valid((i-1,j+1)) and not self.is_same_color(pos,(i-1,j+1)) and not self.is_empty((i-1,j+1)):
                     places.append((i-1,j+1))
-                if  self.is_valid((i-1,j-1)) and not self.is_same_color(pos,(i-1,j-1)):
+                if  self.is_valid((i-1,j-1)) and not self.is_same_color(pos,(i-1,j-1)) and not self.is_empty((i-1,j-1)):
                     places.append((i-1,j-1))
                 return places
             else:
@@ -57,9 +57,9 @@ class ChessBoard:
                     places.append((i+1,j))
                 if self.is_valid((i+2,j)) and i == 1 and self.is_empty((i+2,j)):
                     places.append((i+2,j))
-                if self.is_valid((i+1,j+1)) and not self.is_same_color(pos,(i+1,j+1)):
+                if self.is_valid((i+1,j+1)) and not self.is_same_color(pos,(i+1,j+1)) and not self.is_empty((i+1,j+1)):
                     places.append((i+1,j+1))
-                if  self.is_valid((i+1,j-1)) and not self.is_same_color(pos,(i+1,j-1)):
+                if  self.is_valid((i+1,j-1)) and not self.is_same_color(pos,(i+1,j-1))and not self.is_empty((i+1,j-1)):
                     places.append((i+1,j-1))
                 return places
 
@@ -123,7 +123,7 @@ class ChessBoard:
         for i in range(8):
             for j in range(8):
                 if self.is_white((i,j)):
-                    possible_moves = set(self.all_possible_moves((i,j)))
+                    possible_moves = self.all_possible_moves((i,j))
                     for x,y in possible_moves:
                         removed = self.board[x][y]
                         self.board[x][y] = self.board[i][j]
@@ -139,7 +139,7 @@ class ChessBoard:
             for j in range(8):
                 if self.is_black((i,j)):
                     piece = self.board[i][j][1].lower()
-                    possible_moves = set(self.all_possible_moves((i,j)))
+                    possible_moves = self.all_possible_moves((i,j))
                     for x,y in possible_moves:
                         promoted = False
                         freq = 1
@@ -154,7 +154,14 @@ class ChessBoard:
                                 self.board[i][j] = 'bn'
                             self.board[x][y] = self.board[i][j]
                             self.board[i][j] = '00'
-                            ans = self.is_checkmate()
+                            ans = self.is_checkmate() 
+                            # Uncomment the below section to display what the board looks like after the move
+                            '''
+                            if ans:
+                                for row in self.board:
+                                    print(*row)
+                                print()
+                            '''
                             self.board[i][j] = self.board[x][y]
                             self.board[x][y] = removed
                             if promoted:
@@ -162,7 +169,7 @@ class ChessBoard:
                             if ans is True:
                                 return [(i,j),(x,y)]
         return None
-    # To name the row columns according to the chess
+    # To name the row columns according to the chess conventions
     def findMove(self):
         sent = self.solve()
         if sent == None:
@@ -181,14 +188,14 @@ class ChessBoard:
 ## Example driver code
         
 board = [
-    ['wr', '00', '00', '00', 'wk', 'wb', '00', 'wr'],
-    ['wp', 'wp', '00', 'wq', 'wp', '00', 'wp', '00'],
-    ['00', '00', 'wn', 'wp', 'bn', 'wp', '00', '00'],
     ['00', '00', '00', '00', '00', '00', '00', '00'],
-    ['00', '00', '00', '00', 'bq', '00', '00', 'wp'],
-    ['00', '00', '00', '00', '00', '00', 'bp', '00'],
-    ['bp', 'bp', 'bp', '00', 'bp', 'bp', 'bk', 'bp'],
-    ['br', '00', 'bb', '00', '00', 'br', '00', '00']
+    ['00', 'bp', '00', '00', '00', '00', '00', '00'],
+    ['wk', '00', '00', '00', '00', '00', '00', '00'],
+    ['00', '00', '00', 'bb', '00', '00', '00', '00'],
+    ['bk', '00', '00', 'bb', '00', '00', '00', '00'],
+    ['00', '00', '00', '00', '00', '00', '00', '00'],
+    ['00', '00', '00', '00', '00', '00', '00', '00'],
+    ['00', '00', '00', '00', '00', '00', '00', '00']
 ]
 
 obj = ChessBoard(board)
